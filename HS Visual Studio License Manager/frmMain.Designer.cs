@@ -1,4 +1,4 @@
-﻿namespace HS_VSLicenseManager
+﻿namespace HSVSLicenseManager
 {
     partial class frmMain
     {
@@ -36,6 +36,8 @@
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.label3 = new System.Windows.Forms.Label();
             this.chkVSInstalled = new System.Windows.Forms.CheckBox();
             this.cbVSVersion = new System.Windows.Forms.ComboBox();
             this.cbVSKind = new System.Windows.Forms.ComboBox();
@@ -46,6 +48,7 @@
             this.statusStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -102,6 +105,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.panel1);
             this.tabPage1.Controls.Add(this.chkVSInstalled);
             this.tabPage1.Controls.Add(this.cbVSVersion);
             this.tabPage1.Controls.Add(this.cbVSKind);
@@ -115,6 +119,27 @@
             this.tabPage1.Text = "Main";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // panel1
+            // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.label3);
+            this.panel1.Location = new System.Drawing.Point(3, 74);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(789, 304);
+            this.panel1.TabIndex = 6;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(4, 10);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(38, 12);
+            this.label3.TabIndex = 5;
+            this.label3.Text = "label3";
+            // 
             // chkVSInstalled
             // 
             this.chkVSInstalled.AutoSize = true;
@@ -127,12 +152,16 @@
             this.chkVSInstalled.TabIndex = 4;
             this.chkVSInstalled.Text = "Installed";
             this.chkVSInstalled.UseVisualStyleBackColor = true;
+            this.chkVSInstalled.Visible = false;
             this.chkVSInstalled.CheckedChanged += new System.EventHandler(this.chkVSInstalled_CheckedChanged);
             // 
             // cbVSVersion
             // 
             this.cbVSVersion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbVSVersion.Enabled = false;
             this.cbVSVersion.FormattingEnabled = true;
+            this.cbVSVersion.Items.AddRange(new object[] {
+            "(No Visual Studio)"});
             this.cbVSVersion.Location = new System.Drawing.Point(82, 9);
             this.cbVSVersion.Name = "cbVSVersion";
             this.cbVSVersion.Size = new System.Drawing.Size(135, 20);
@@ -142,11 +171,13 @@
             // cbVSKind
             // 
             this.cbVSKind.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbVSKind.Enabled = false;
             this.cbVSKind.FormattingEnabled = true;
             this.cbVSKind.Location = new System.Drawing.Point(82, 37);
             this.cbVSKind.Name = "cbVSKind";
             this.cbVSKind.Size = new System.Drawing.Size(118, 20);
             this.cbVSKind.TabIndex = 2;
+            this.cbVSKind.SelectedIndexChanged += new System.EventHandler(this.cbVSKind_SelectedIndexChanged);
             // 
             // label2
             // 
@@ -195,6 +226,8 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -215,6 +248,8 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label label3;
     }
 }
 

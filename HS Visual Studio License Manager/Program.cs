@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace HS_VSLicenseManager
+namespace HSVSLicenseManager
 {
     static class Program
     {

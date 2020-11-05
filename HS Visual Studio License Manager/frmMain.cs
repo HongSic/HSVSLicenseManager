@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
+using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
-using HS_VSLicenseManager.Properties;
+using HSVSLicenseManager.Properties;
 using Microsoft.Win32;
 
-namespace HS_VSLicenseManager
+namespace HSVSLicenseManager
 {
-    //ProtectedData: https://docs.microsoft.com/ko-kr/dotnet/api/system.security.cryptography.protecteddata?view=dotnet-plat-ext-3.1
-    //CryptProtectData(), CryptUnprotectData() 
+    //ProtectedData 클래스: https://docs.microsoft.com/ko-kr/dotnet/api/system.security.cryptography.protecteddata?view=dotnet-plat-ext-3.1
 
     //Trial period reset of Visual Studio Community Edition 8: https://dimitri.janczak.net/2019/07/13/trial-period-reset-of-visual-studio-community-edition/
 
@@ -28,13 +29,17 @@ namespace HS_VSLicenseManager
         public frmMain()
         {
             InitializeComponent();
+
+
             regkey_root = Registry.ClassesRoot.OpenSubKey("Licenses");
             chkVSInstalled_CheckedChanged(null, null);
         }
         private void chkVSInstalled_CheckedChanged(object sender, EventArgs e)
         {
+            cbVSVersion.Enabled = false;
             cbVSVersion.Items.Clear();
-            if(chkVSInstalled.Checked)
+
+            if (chkVSInstalled.Checked)
             {
                 foreach (var regkey_str in SeprateComma(GetStringGlobalResource("VS_REG_KEY")))
                 {
@@ -46,7 +51,15 @@ namespace HS_VSLicenseManager
                     }
                 }
 
-                if (cbVSVersion.Items.Count > 0) cbVSVersion.SelectedIndex = cbVSVersion.Items.Count - 1;
+                if (cbVSVersion.Items.Count > 0)
+                {
+                    cbVSVersion.Enabled = true;
+                    cbVSVersion.SelectedIndex = cbVSVersion.Items.Count - 1;
+                    return;
+                }
+
+                cbVSVersion.Items.Add("(No Visual Studio)");
+                cbVSVersion.SelectedIndex = 0;
             }
             else
             {
@@ -70,19 +83,46 @@ namespace HS_VSLicenseManager
 
         private void cbVSVersion_SelectedIndexChanged(object sender, EventArgs e)
         {
+            cbVSKind.Enabled = false;
             cbVSKind.Items.Clear();
 
             var veritem_root = cbVSVersion.Items[cbVSVersion.SelectedIndex] as VSVersionItem;
-            foreach (var vskind_str in SeprateComma(GetStringGlobalResource("VS_REG_SUB_" + veritem_root.Version)))
+            if(veritem_root != null)
             {
-                using(var vskind_reg = veritem_root.Root.OpenSubKey(vskind_str))
+                foreach (var vskind_str in SeprateComma(GetStringGlobalResource("VS_REG_SUB_" + veritem_root.Version)))
                 {
-                    if(vskind_reg != null)
+                    var vskind_reg = veritem_root.Root.OpenSubKey(vskind_str);
+                    if (vskind_reg != null)
                     {
-                        string vskind_name = GetStringGlobalResource(string.Format("VS_REG_SUB_{0}_{1}", veritem_root.Name, vskind_str));
+                        string vskind_name = GetStringGlobalResource(string.Format("VS_REG_SUB_{0}_{1}", veritem_root.Version, vskind_str));
                         cbVSKind.Items.Add(new VSKindItem(veritem_root, vskind_str, vskind_name, vskind_reg));
                     }
                 }
+
+                if (cbVSKind.Items.Count > 0)
+                {
+                    cbVSKind.Enabled = true;
+                    cbVSKind.SelectedIndex = cbVSKind.Items.Count - 1;
+                    return;
+                }
+            }
+
+
+            cbVSKind.Items.Add("(No VS Kind)");
+            cbVSKind.SelectedIndex = 0;
+        }
+
+        private void cbVSKind_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var item_root = cbVSKind.Items[cbVSKind.SelectedIndex] as VSKindItem;
+            if (item_root != null)
+            {
+                using (var reg_item = item_root.Root)
+                {
+                    var data_enc = reg_item.GetValue(null) as byte[];
+                    var data = ProtectedData.Unprotect(data_enc, null, DataProtectionScope.CurrentUser);
+                    File.WriteAllBytes("D:\\key.bin", data);
+                }  
             }
         }
     }

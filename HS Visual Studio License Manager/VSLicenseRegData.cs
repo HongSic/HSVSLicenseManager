@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace HS_VSLicenseManager
+namespace HSVSLicenseManager
 {
     public class VSVersionItem : IDisposable
     {
